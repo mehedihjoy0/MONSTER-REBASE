@@ -79,13 +79,13 @@ git commit -m "prebuilts/samsung/r9qxxx: add 'display' stack" -m "$CREDIT"
 #git push origin sixteenQPR2
 
 rsync -av --inplace --no-compress $SCR/prebuilts/samsung/e1qzcx prebuilts/samsung
-sed -i '/- module: "Galaxy A73 5G (a73xqxx)"/i \          - module: "Galaxy S24 (e1qzcx)"\n            device: "e1qzcx"\n            firmware: "SM-S9210/CHC/356724910402671"' .github/workflows/blobs.yml
+sed -i '/- module: "Galaxy A73 5G (a73xqxx)"/i \          - module: "Galaxy S24 (China) (e1qzcx)"\n            device: "e1qzcx"\n            firmware: "SM-S9210/CHC/356724910402671"' .github/workflows/blobs.yml
 git add .
 git commit -m "prebuilts/samsung/e1qzcx: init" -m "$CREDIT"
 #git push origin sixteenQPR2
 
 rsync -av --inplace --no-compress $SCR/prebuilts/samsung/r11qxxx prebuilts/samsung
-sed -i '/- module: "Galaxy A73 5G (a73xqxx)""/i \          - module: "Galaxy S23 FE (r11qxxx)"\n            device: "r11qxxx"\n            firmware: "SM-S711U1/AIO/358460181039276"' .github/workflows/blobs.yml
+sed -i '/- module: "Galaxy A73 5G (a73xqxx)"/i \          - module: "Galaxy S23 FE (Snapdragon) (r11qxxx)"\n            device: "r11qxxx"\n            firmware: "SM-S711U1/AIO/358460181039276"' .github/workflows/blobs.yml
 git add .
 git commit -m "prebuilts/samsung/r11qxxx: init" -m "$CREDIT"
 #git push origin sixteenQPR2
