@@ -1,0 +1,23 @@
+name: MONSTER Rebase
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Rebase Script
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }} 
+        run: bash monster-rebase.sh
+        
