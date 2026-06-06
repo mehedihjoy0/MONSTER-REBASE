@@ -84,6 +84,12 @@ git add .
 git commit -m "prebuilts/samsung/e1qzcx: init" -m "$CREDIT"
 #git push origin sixteenQPR2
 
+rsync -av --inplace --no-compress $SCR/prebuilts/samsung/e1qzcx prebuilts/samsung
+sed -i '/- module: "Galaxy Tab S11 5G (gts11xx)"/i \          - module: "Galaxy S23 FE (r11qxxx)"\n            device: "r11qxxx"\n            firmware: "SM-S711U1/AIO/358460181039276"' .github/workflows/blobs.yml
+git add .
+git commit -m "prebuilts/samsung/r11qxxx: init" -m "$CREDIT"
+#git push origin sixteenQPR2
+
 rsync -av --inplace --no-compress $SCR/platform/sm7150 platform
 git add .
 git commit -m "platform/sm7150: init" -m "$CREDIT"
