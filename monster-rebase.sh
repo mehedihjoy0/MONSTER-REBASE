@@ -11,10 +11,8 @@ cd $SCR
 git clone https://oauth2:${GH_TOKEN}@github.com/mehedihjoy0/MonsterROM-SM7150.git $MONSTER
 
 cd $MONSTER
-rsync -av --inplace --no-compress prebuilts/samsung/r11sxxx/* prebuilts/samsung/r11qxxx
-rsync -av --inplace --no-compress $SCR/prebuilts/samsung/r11qxxx/.current prebuilts/samsung/r11qxxx
-sed -i 's|r11sxxx|r11qxxx|g' platform/sm7150/patches/_desixtification/customize.sh
-# Commit and push changes
-git add .
-git commit -m "prebuilts/samsung/r11qxxx: add more blobs" -m "$CREDIT"
+git remote add upstream https://github.com/devcore94/MonsterROM
+git checkout sixteenQPR2
+git fetch upstream
+git cherry-pick -X theirs 26369475a19665113c1884ed79d3f65743fb30fb^..ffe9aa36b7508ccaed8ae26fefba58ecdfb9bc1e
 git push origin sixteenQPR2
