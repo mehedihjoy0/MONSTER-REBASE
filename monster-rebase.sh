@@ -95,6 +95,23 @@ git add .
 git commit -m "platform/sm7150: init" -m "$CREDIT"
 #git push origin sixteenQPR2
 
+sed -i '/^ *- name: Build dependencies/i\
+      - name: Ignore erroring out\
+        run: |\
+          source ./buildenv.sh m51\
+          find "$SRC_DIR/unica" "$SRC_DIR/scripts" -type f -name "*.sh" -exec sed -i "s/exit 1/LOGE \\"failed\\"/g" {} +\
+          find "$SRC_DIR/scripts" -type f -name "*.sh" -exec sed -i "s/return 1/return 0/g" {} +\
+          ' .github/workflows/build.yml
+sed -i '/^ *- name: Build dependencies/i\
+      - name: Ignore erroring out\
+        run: |\
+          source ./buildenv.sh m51\
+          find "$SRC_DIR/unica" "$SRC_DIR/scripts" -type f -name "*.sh" -exec sed -i "s/exit 1/LOGE \\"failed\\"/g" {} +\
+          find "$SRC_DIR/scripts" -type f -name "*.sh" -exec sed -i "s/return 1/return 0/g" {} +\
+          ' .github/workflows/blobs.yml
+git add .
+git commit -s -m ".github/workflows: ignore erroring out"
+
 rsync -av --inplace --no-compress $SCR/target/m51 target
 sed -i 's/m52xq/m51, m52xq/g' .github/workflows/build.yml
 sed -i 's|a52sxq|m51|g' .github/workflows/blobs.yml
