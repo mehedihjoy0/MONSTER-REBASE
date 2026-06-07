@@ -15,5 +15,6 @@ cd $MONSTER
 # git checkout sixteenQPR2
 # git fetch upstream
 rsync -av --inplace --no-compress $SCR/prebuilts/samsung/a73xqxx/* prebuilts/samsung/a73xqxx
+git add .
 git commit -m "Add light hal"
 git push origin sixteenQPR2
