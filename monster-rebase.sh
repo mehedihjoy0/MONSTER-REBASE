@@ -11,8 +11,9 @@ cd $SCR
 git clone https://oauth2:${GH_TOKEN}@github.com/mehedihjoy0/MonsterROM-SM7150.git $MONSTER
 
 cd $MONSTER
-git remote add upstream https://github.com/devcore94/MonsterROM
-git checkout sixteenQPR2
-git fetch upstream
-git cherry-pick -X theirs 26369475a19665113c1884ed79d3f65743fb30fb^..ffe9aa36b7508ccaed8ae26fefba58ecdfb9bc1e
+# git remote add upstream https://github.com/devcore94/MonsterROM
+# git checkout sixteenQPR2
+# git fetch upstream
+rsync -av --inplace --no-compress $SCR/prebuilts/samsung/a73xqxx/* prebuilts/samsung/a73xqxx
+git commit -m "Add light hal"
 git push origin sixteenQPR2
