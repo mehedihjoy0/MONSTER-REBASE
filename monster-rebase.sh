@@ -18,20 +18,26 @@ git fetch upstream
 git reset --hard upstream/sixteenQPR2
 git clean -fd
 
-sed -i '/^concurrency:$/,/^  cancel-in-progress: true$/d' .github/workflows/build.yml
-git add .
-git commit -m ".github/workflows: remove concurrency" -m "$CREDIT"
-git push origin sixteenQPR2 --force
+# sed -i '/^concurrency:$/,/^  cancel-in-progress: true$/d' .github/workflows/build.yml
+# git add .
+# git commit -m ".github/workflows: remove concurrency" -m "$CREDIT"
+# git push origin sixteenQPR2 --force
 
 
 git clone https://github.com/salvogiangri/UN1CA $UN1CA
 rsync -av --inplace --no-compress $UN1CA/prebuilts/samsung/gts11xx $MONSTER/prebuilts/samsung
 
-sed -i '/^# Support legacy SehLights HAL (pre-API 35)$/,/^fi$/ {
-  /^# Support legacy SehLights HAL (pre-API 35)$/d
-  /^fi$/d
+sed -i '/^# - Check for \[lsr wD, wS, #0x18\] to determine if the newer HAL is already in place$/,/^# Ensure config_num_physical_slots is configured (pre-API 36)$/{
+  /^# Ensure config_num_physical_slots is configured (pre-API 36)$/!d
 }' unica/patches/legacy/customize.sh
 sed -i '/^# SEC_PRODUCT_FEATURE_FINGERPRINT_CONFIG_SENSOR$/,/^fi$/d' unica/patches/product_feature/customize.sh
+perl -0777 -pi -e 's/# SEC_PRODUCT_FEATURE_WLAN_SEC_SUPPORT_MOBILEAP_WIFI_CONCURRENCY.*?\"SPF_Concurrency=false\"\s+fi\s+fi\n?//s' unica/patches/product_feature/customize.sh
+sed -i 's|smali_classes4/com/samsung/android/settings/Rune.smali|smali_classes5/com/samsung/android/settings/Rune.smali|g' unica/patches/product_feature/customize.sh
+perl -0777 -pi -e 's/# SEC_PRODUCT_FEATURE_AUDIO_SUPPORT_DUAL_SPEAKER.*?LOG_MISSING_PATCHES \"SOURCE_AUDIO_SUPPORT_DUAL_SPEAKER\" \"TARGET_AUDIO_SUPPORT_DUAL_SPEAKER\"\s+fi\s+fi\n?//s' unica/patches/product_feature/customize.sh
+perl -0777 -pi -e 's%# SEC_PRODUCT_FEATURE_RIL_FEATURES.*?LOG_MISSING_PATCHES \"SOURCE_RIL_FEATURES\" \"TARGET_RIL_FEATURES\"\s+fi\s+fi\n?%%s' unica/patches/product_feature/customize.sh
+perl -0777 -pi -e 's/# SEC_PRODUCT_FEATURE_RIL_SUPPORT_WATERPROOF_SIM_TRAY_MSG.*?LOG_MISSING_PATCHES \"SOURCE_RIL_SUPPORT_WATERPROOF_SIM_TRAY_MSG\" \"TARGET_RIL_SUPPORT_WATERPROOF_SIM_TRAY_MSG\"\s+fi\s+fi\n?//s' unica/patches/product_feature/customize.sh
+perl -0777 -pi -e 's%# Ensure config_num_physical_slots.*?Backport-legacy-UiccController-code\.patch\"\s+fi\s+fi\n?%%s' unica/patches/legacy/customize.sh
+
 git add .
 git commit -m "make patch compatible" -m "$CREDIT"
 
@@ -47,8 +53,7 @@ git commit -m "make patch compatible" -m "$CREDIT"
 # git commit -m "unica/mods/applock: init" -m "$CREDIT"
 #git push origin sixteenQPR2
 
-sed -i '/^SOURCE_FIRMWARE="SM-S948B\/EUX\/352033862853095"$/a\
-SOURCE_EXTRA_FIRMWARES=("SM-S711U1/AIO/358460181039276")' unica/configs/qssi.sh
+sed -i 's|SOURCE_EXTRA_FIRMWARES=()|SOURCE_EXTRA_FIRMWARES=("SM-S711U1/AIO/358460181039276")|g' unica/configs/qssi.sh
 git add .
 git commit -m "unica/configs/qssi.sh: add source_extra_firmware" -m "$CREDIT"
 
@@ -93,7 +98,11 @@ git commit -m "unica: debloat 'Google Messages' instead of 'Samsung Messages'" -
 rsync -av --inplace --no-compress $SCR/prebuilts/samsung/r9qxxx prebuilts/samsung
 git add .
 git commit -m "prebuilts/samsung/r9qxxx: add 'display' stack" -m "$CREDIT"
-#git push origin sixteenQPR2
+
+
+rsync -av --inplace --no-compress $SCR/prebuilts/samsung/a73xqxx/* prebuilts/samsung/a73xqxx
+git add .
+git commit -m "prebuilts/samsung/a73xqxx: add light blobs" -m "$CREDIT"
 
 # rsync -av --inplace --no-compress $SCR/prebuilts/samsung/e1qzcx prebuilts/samsung
 # sed -i '/- module: "Galaxy A73 5G (a73xqxx)"/i \          - module: "Galaxy S24 (China) (e1qzcx)"\n            device: "e1qzcx"\n            firmware: "SM-S9210/CHC/356724910402671"' .github/workflows/blobs.yml
@@ -156,8 +165,8 @@ perl -pi -e 's/target: \[o1s, p3s, r9s, t2s\]/build_type: [encrypted, decrypted]
 # 2. Replace all matrix.target references with m51 (Your original sed works fine here)
 sed -i 's|${{ matrix.target }}|m51|g' .github/workflows/build.yml
 # 3. Safely inject the new configuration step before "Build ROM"
-perl -pi -e 's%^([ \t]*)- name: Build ROM%$1- name: Configure encryption state\n$1  if: matrix.build_type == "encrypted"\n$1  run: |\n$1    source ./buildenv.sh m51\n$1    touch target/m51/patches/dfe/disable\n$1    sed -i "s|decrypted|encrypted|g" scripts/build_flashable_zip.sh\n\n$1- name: Build ROM%' .github/workflows/build.yml
+perl -pi -e 's%^([ \t]*)- name: Build ROM%$1- name: Configure encryption state\n$1  if: matrix.build_type == \x27encrypted\x27\n$1  run: |\n$1    source ./buildenv.sh m51\n$1    touch target/m51/patches/dfe/disable\n$1    sed -i \x27s|decrypted|encrypted|g\x27 scripts/build_flashable_zip.sh\n\n$1- name: Build ROM%' .github/workflows/build.yml
 # Commit and push changes
 git add .
 git commit -m ".github/workflows/build.yml: en/decrypted build & upload to 'PixelDrain'" -m "$CREDIT"
-git push origin sixteenQPR2
+git push origin sixteenQPR2 --force
