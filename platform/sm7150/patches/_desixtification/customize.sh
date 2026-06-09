@@ -1,16 +1,16 @@
-LOG_STEP_IN "- Adding S23 FE (r11qxxx) lib/ blobs"
-ADD_TO_WORK_DIR "r11qxxx" "system" "system/lib" 0 0 644
+LOG_STEP_IN "- Adding 32-bit libs from soirce"
+ADD_TO_WORK_DIR "$SOURCE_EXTRA_FIRMWARES" "system" "system/lib"
+ADD_TO_WORK_DIR "$SOURCE_EXTRA_FIRMWARES" "system_ext" "lib"
 
 BLOBS_LIST="
 system/apex/com.android.i18n.apex
 system/apex/com.android.runtime.apex
 system/apex/com.google.android.tzdata6.apex
 system/bin/bootstrap/linker
-system/bin/bootstrap/linker_asan
 "
 for blob in $BLOBS_LIST
 do
-ADD_TO_WORK_DIR "r11qxxx" "system" "$blob"
+ADD_TO_WORK_DIR "$SOURCE_EXTRA_FIRMWARES" "system" "$blob"
 done
 LOG_STEP_OUT
 
